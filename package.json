@@ -1,0 +1,16 @@
+{
+  "name": "nodejs-spider",
+  "version": "0.0.2",
+  "description": "适用nodejs写的一个框架",
+  "main": "index.js",
+  "scripts": {
+    "update": "node update.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/cuo9958/nodejs-spider.git"
+  },
+  "author": "545570335@qq.com",
+  "license": "MIT"
+}
