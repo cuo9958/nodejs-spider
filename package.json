@@ -12,5 +12,8 @@
     "url": "https://gitee.com/cuo9958/nodejs-spider.git"
   },
   "author": "545570335@qq.com",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "superagent": "^3.8.1"
+  }
 }
