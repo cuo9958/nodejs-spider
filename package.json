@@ -14,6 +14,7 @@
   "author": "545570335@qq.com",
   "license": "MIT",
   "dependencies": {
-    "superagent": "^3.8.1"
+    "node-fetch": "^1.7.3",
+    "puppeteer": "^0.13.0"
   }
 }
