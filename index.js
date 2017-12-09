@@ -1,19 +1,19 @@
 /**
  * 入口
  */
+const spider = require('./spider');
 const config = require('./config')
-const urls = require('./lib/urls')
-const render = require('./lib/render')
+const browser = require('./lib/browser')
 
-let limit = 0;
-//循环处理
-while (urls.length > 0) {
-    if (limit < 2) {
-        limit++;
-        render.start(urls.shift())
-    }
-}
+/**
+ * 初始化
+ */
+spider.reg(browser)
 
+/**
+ * 运行整个程序
+ */
+spider.run();
 
 /**
  * 退出监听
