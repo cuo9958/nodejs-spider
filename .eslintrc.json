@@ -1,0 +1,12 @@
+{
+    "extends": "standard",
+    "plugins": [
+        "standard",
+        "promise",
+        "import",
+        "node"
+    ],
+    "rules":{
+        "semi": 0
+    }
+}
