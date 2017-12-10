@@ -5,6 +5,7 @@ const spider = require('./spider');
 const config = require('./config')
 const browser = require('./lib/browser')
 
+if (!process.env.NODE_ENV) process.env.NODE_ENV = 'development';
 /**
  * 初始化
  */
@@ -14,7 +15,6 @@ spider.reg(browser)
  * 运行整个程序
  */
 spider.run();
-
 /**
  * 退出监听
  */
