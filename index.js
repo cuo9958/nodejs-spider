@@ -3,7 +3,7 @@
  */
 const spider = require('./spider');
 const config = require('./config')
-const browser = require('./lib/browser')
+// const browser = require('./lib/browser')
 const path = require('path');
 const fs = require('fs');
 
@@ -12,20 +12,22 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = 'development';
 /**
  * 初始化
  */
-spider.reg(browser)
+// spider.reg(browser)
 
 /**
  * 加载文件夹下的源
  */
 var dirList = fs.readdirSync('./source');
 for (const item of dirList) {
-    console.log(path.resolve(__dirname,"./"+item));
-    console.log(item)
+    if (path.extname(item) !== '.js') continue;
+    let name = item.replace('.js', '');
+    let dir = path.resolve(__dirname, "./source/" + item)
+    spider.add(name,require(dir))
 }
 /**
  * 运行整个程序
  */
-// spider.run();
+spider.run();
 /**
  * 退出监听
  */
