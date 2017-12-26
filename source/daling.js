@@ -25,6 +25,7 @@ class Daling extends iSource {
         await this.page.goto('https://dalingjia.com/subject/0c9c949', {
             waitUntil: 'domcontentloaded'
         });
+        // await sleep(1000);
         let html = await this.page.content();
         if (html.length < 100) {
             console.log(html);
@@ -35,7 +36,7 @@ class Daling extends iSource {
         }
         console.log(`已经执行${this.count}次.`);
         await this.page.close();
-        await sleep(2000);
+        // await sleep(1000);
         this.loop();
     }
 }
