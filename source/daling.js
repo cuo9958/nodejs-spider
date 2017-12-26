@@ -22,7 +22,7 @@ class Daling extends iSource {
     async loop() {
         this.count++;
         this.page = await browser.page();
-        await this.page.goto('https://dalingjia.com/subject/7fd4047', {
+        await this.page.goto('https://dalingjia.com/subject/0c9c949', {
             waitUntil: 'domcontentloaded'
         });
         let html = await this.page.content();
