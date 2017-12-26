@@ -34,11 +34,11 @@ exports.run = async function (app) {
         await module.init();
     }
     //执行下一个逻辑
-    function next() {
+    async function next() {
         if (resource.length == 0) return;
         let source = resource.shift();
         console.log('开始执行:' + source.name)
-        new source.module(next).start()
+        await new source.module(next).start()
     }
-    next();
+    await next();
 }

@@ -4,11 +4,10 @@
 const iSource = require('../source_interface')
 
 class Lagou extends iSource {
-    
+
     start() {
         console.log('开始执行logo')
-        console.log(this.next)
-
+        this.next();
     }
 }
 
