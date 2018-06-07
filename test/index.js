@@ -16,6 +16,12 @@ container.mysql({
 });
 
 class Daling extends WebSite {
+    constructor() {
+        super();
+        this.url = "http://www.qu.la/book/1/";
+        this.referer = "http://www.qu.la";
+    }
+
 
 }
 container.reg(Daling);
