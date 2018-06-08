@@ -33,31 +33,41 @@ const myql_default = {
  * 爬虫要访问的网站对象
  */
 exports.WebSite = class WebSite {
-    url = "";
-    referer = "";
-    async start() {
-        if (!this.url) return;
-        console.log("开始爬取")
-        let res = await fetch(this.url, {
-            headers: {
-                "Host": "www.qu.la",
-                "Referer": this.referer,
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
-            }
-        });
-        let html = await res.text();
-        let dom = cheerio.load(html);
-        let tit = dom("#wrapper #list dt").text();
-        console.log("标题", tit);
-        let list = dom("#wrapper #list");
-        console.log(list);
-        list.find("a").each(function () {
-            let dd = dom(this);
-            console.log(dd.attr('href'));
-            console.log(dd.text());
-        });
+    /**
+     * 来源网站,假冒机器人
+     */
+    referer = "http://www.baidu.com";
+    /**
+     * 当前网站的主域名
+     */
+    host = "";
+    /**
+     * 加载链接地址并返回处理结果
+     */
+    async load(url) {
+        try {
+            let res = await fetch(url, {
+                headers: {
+                    "Host": this.host,
+                    "Referer": this.referer,
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
+                }
+            });
+            let html = await res.text();
+            return cheerio.load(html);
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
     }
+    /**
+     * 开始执行的方法,必须实现这个才能开始
+     */
+    start() { }
 
+    data() {
+
+    }
 }
 /**
  * 执行操作的容器
