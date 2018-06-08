@@ -3,6 +3,8 @@
  */
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
+import mysql from 'mysql';
+import { rejects } from 'assert';
 /**
  * mysql默认配置
  */
@@ -26,13 +28,17 @@ const myql_default = {
     /**
      * 密码
      */
-    pwd: ""
+    password: ""
 }
 
 /**
  * 爬虫要访问的网站对象
  */
 exports.WebSite = class WebSite {
+    constructor(db) {
+        this.db = db;
+    }
+    db;
     /**
      * 来源网站,假冒机器人
      */
@@ -60,36 +66,69 @@ exports.WebSite = class WebSite {
             return null;
         }
     }
+    async willStart() {
+        this.start();
+    }
     /**
      * 开始执行的方法,必须实现这个才能开始
      */
     start() { }
 
-    data() {
+    async data() {
+        let result = await this.db.query("select * from t_user");
+        console.log(result);
+    }
+}
+/**
+ * 数据库操作类
+ */
+class DB_mysql {
+    constructor(options) {
+        console.log("mysql配置", options)
+        this.conf = Object.assign(myql_default, options);
+        this.db = mysql.createPool(this.conf);
+    }
+    conf = {};
+    db: mysql.Pool;
 
+    async query(sql, params = []): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.db.getConnection(function (err, connection) {
+                if (err) return reject(err);
+                connection.query(sql, params, function (err, results, fields) {
+                    connection.release();
+                    if (err) return reject(err);
+                    // resolve({ results, fields });
+                    //RowDataPacket
+                    resolve(results);
+                });
+            });
+        });
     }
 }
 /**
  * 执行操作的容器
+ * 1.初始化数据库操作对象
  */
 exports.Container = class {
 
-    conf_mysql = null;
     _list: any[] = [];
+    mysql_db: any = null;
     /**
      * 设置mysql数据库的连接对象
      * @param options 
      */
     mysql(options) {
-        console.log("mysql配置", options)
-        this.conf_mysql = Object.assign(myql_default, options);
+        this.mysql_db = new DB_mysql(options);
+        return this;
     }
     /**
      * 注册要爬取的对象
      * @param Model 
      */
     reg(Model) {
-        this._list.push(new Model());
+        this._list.push(new Model(this.mysql_db));
+        return this;
     }
     /**
      * 启动执行程序
@@ -102,7 +141,7 @@ exports.Container = class {
         console.log("间隔", jiange);
         let index = 0;
         setTimeout(() => {
-            this._list[index].start();
+            this._list[index].willStart();
             index++;
             if (index >= this._list.length) index = 0;
         }, jiange);

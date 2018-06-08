@@ -6,18 +6,6 @@ const {
     WebSite
 } = require("../index");
 
-let container = new Container({
-
-});
-
-//设置mysql数据库对象
-container.mysql({
-    // database: "test",
-    host: "120.78.57.59",
-    user: "guest",
-    pwd: "Zixiao521@"
-});
-
 // class Biqukan extends WebSite {
 //     constructor() {
 //         super();
@@ -32,14 +20,12 @@ container.mysql({
  * ----怎么区分已经使用过的链接
  */
 class Biqu extends WebSite {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.base = "http://www.qu.la";
         this.url = "http://www.qu.la/book/1/";
         this.referer = "http://www.qu.la";
         this.host = "www.qu.la";
-        this.db = {
-
-        };
     }
     //拿到源,比较更新,更新结果
     async start() {
@@ -50,29 +36,42 @@ class Biqu extends WebSite {
         //从首页地址
         let dom = await this.load(this.url);
 
-        // let tit = dom("#wrapper #list dt").text();
-        // console.log("标题", tit);
-
-        //从数据库中拿到已有章节列表的长度和最后一章
         //拿到章节列表
         let list = dom("#wrapper #list").find("a");
-        console.log(list.length);
-        //如果长度一样,比较最后一条,也一样就退出
-        let zhangs = [];
-        list.each(function () {
+        console.log("爬取的数据:", list.length);
+        //从数据库中拿到已有章节列表的长度和最后一章
+        let clist = await this.db.query("select * from t_chapter where bid=1;");
+        console.log("已有的数据", clist.length);
+        
+        //如果长度一样,
+        //TODO:比较最后一条,也一样就退出
+        if (clist.length === list.length) return;
+        let obj = this;
+        list.each(async function () {
             let dd = dom(this);
-            zhangs.push({
-                href: dd.attr('href'),
-                txt: dd.text()
-            });
+            let href = dd.attr('href');
+            let text = dd.text();
+            if (href.indexOf("/") != 0) {
+                href = obj.url + href;
+            } else {
+                href = obj.base + href;
+            }
+            let has = false;
+            for (let i = 0; i < clist.length; i++) {
+                if (clist[i].href == href) {
+                    has = true;
+                    break;
+                }
+            }
+            //将多出来的章节保存到数据库
+            if (!has) {
+                await obj.db.query("insert into t_chapter (title,href,bid,create_time) values(?,?,?,?);", [text, href, 1, Date.now()]);
+            }
         });
-        console.log(zhangs.length);
-        //将多出来的章节保存到数据库
+        dom = null;
+        console.log("爬完一次");
     }
-    //从数据库中拿到一条数据
-    getOne() {
 
-    }
 }
 /**
  * 1.从全局拿到链接
@@ -86,6 +85,15 @@ class BiquSave extends WebSite {
     }
 }
 
-container.reg(Biqu);
-//
-container.run();
+new Container()
+    //设置mysql数据库对象
+    .mysql({
+        database: "test",
+        host: "120.78.57.59",
+        user: "guest",
+        password: "Zixiao521@"
+    })
+    //注册对象
+    .reg(Biqu)
+    //启动
+    .run();
