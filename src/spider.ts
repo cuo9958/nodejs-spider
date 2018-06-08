@@ -4,7 +4,7 @@
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import mysql from 'mysql';
-import { rejects } from 'assert';
+
 /**
  * mysql默认配置
  */
@@ -65,9 +65,6 @@ exports.WebSite = class WebSite {
             console.log(error);
             return null;
         }
-    }
-    async willStart() {
-        this.start();
     }
     /**
      * 开始执行的方法,必须实现这个才能开始
@@ -136,12 +133,12 @@ exports.Container = class {
     run() {
         if (this._list.length === 0) return;
         console.log("执行操作")
-        let jiange = 500 / this._list.length;
-        if (jiange < 100) jiange = 100;
+        let jiange = 1000 / this._list.length;
+        if (jiange < 300) jiange = 300;
         console.log("间隔", jiange);
         let index = 0;
-        setTimeout(() => {
-            this._list[index].willStart();
+        setInterval(() => {
+            this._list[index].start();
             index++;
             if (index >= this._list.length) index = 0;
         }, jiange);
