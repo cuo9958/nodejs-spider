@@ -1,4 +1,4 @@
-const spider = require("../src/test")
+const spider = require("../src/index")
 
 
 function geMintNumber(text) {
