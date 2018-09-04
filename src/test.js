@@ -14,7 +14,7 @@ const cheerio = require('cheerio');
 
 async function loadHtml(url, config) {
     let html = await axios(url, config);
-    return cheerio.load(html);
+    return cheerio.load(html.data);
 }
 module.exports = {
     /**

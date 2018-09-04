@@ -7,20 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "正式",
-            "program": "${workspaceFolder}/index.js",
-            "env": {
-                "NODE_ENV":"production"
-            }
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "启动",
-            "program": "${workspaceFolder}\\index.js",
-            "env": {
-                "NODE_ENV":"development"
-            }
+            "name": "测试",
+            "program": "${workspaceFolder}/test/index.js"
         }
     ]
 }
