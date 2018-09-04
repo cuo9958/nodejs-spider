@@ -4,6 +4,7 @@
  * 3.或者加载dom
  * 4.执行逻辑
  * 5.执行存储,提供db库
+ * 6.固定时间执行一次任务
  */
 
 const config = require("config");
@@ -12,10 +13,15 @@ const db = require("./db");
 const utils = require("./utils");
 const axios = require("axios");
 const cheerio = require('cheerio');
+const schedule = require("node-schedule");
 
 async function loadHtml(url, config) {
     let html = await axios(url, config);
     return cheerio.load(html.data);
+}
+
+function run(date, task) {
+    return schedule.scheduleJob(date, task);
 }
 module.exports = {
     /**
@@ -43,4 +49,8 @@ module.exports = {
      * 工具
      */
     utils,
+    /**
+     * 定时执行方法
+     */
+    run,
 }

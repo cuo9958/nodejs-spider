@@ -54,4 +54,8 @@ async function task() {
     console.log("爬完一次");
 }
 
-task();
+// task();
+
+Spider.run("*/1 * * * * *", function () {
+    console.log("每秒执行一次")
+});
