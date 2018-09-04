@@ -9,6 +9,7 @@
 const config = require("config");
 const Sequelize = require('sequelize');
 const db = require("./db");
+const utils = require("./utils");
 const axios = require("axios");
 const cheerio = require('cheerio');
 
@@ -38,5 +39,8 @@ module.exports = {
      * 数据库的ORM对象
      */
     Sequelize,
-
+    /**
+     * 工具
+     */
+    utils,
 }
